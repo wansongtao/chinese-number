@@ -2,7 +2,7 @@
 将阿拉伯数字转换为中文数字，最大支持16位数字。支持中文大、小写数字、支持小数（保留三位，四舍五入）。
 ## install
 ```bash
-$ npm install chinese-number --save
+$ npm install number2chinesenumber
 ```
 
 ## example
