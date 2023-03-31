@@ -1,6 +1,6 @@
 {
   "name": "number2chinesenumber",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "type": "module",
   "files": [
@@ -11,12 +11,13 @@
   "typings": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.umd.js"
+      "import": "./dist/chinese-number.js",
+      "require": "./dist/chinese-number.umd.cjs"
     }
   },
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "publish": "npm publish --access=public"
   },
   "keywords": [
     "chineseNumber",
