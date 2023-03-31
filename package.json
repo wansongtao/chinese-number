@@ -1,0 +1,38 @@
+{
+  "name": "chinese-number",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/chinese-number.umd.cjs",
+  "module": "./dist/chinese-number.js",
+  "typings": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "keywords": [
+    "chineseNumber",
+    "number",
+    "convertNumber",
+    "convertToChineseNumber",
+    "chinese2number"
+  ],
+  "author": "wansongtao",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "eslint": "^8.37.0",
+    "prettier": "^2.8.7",
+    "typescript": "^5.0.3",
+    "vite": "^4.2.1",
+    "vite-plugin-dts": "^2.1.0"
+  }
+}
