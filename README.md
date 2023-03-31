@@ -7,7 +7,7 @@ $ npm install number2chinesenumber
 
 ## example
 ```javascript
-import convertToChineseNumber from 'chinese-number'
+import convertToChineseNumber from 'number2chinesenumber'
 
 const num = 100.007
 convertToChineseNumber(num) // 一百点零零七
