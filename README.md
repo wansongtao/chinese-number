@@ -20,4 +20,4 @@ convertToChineseNumber(100107) // 十万零一百零七
 ```
 
 ## Links
-- [github doc](https://github.com/wansongtao/stao-ui)
+- [github doc](https://github.com/wansongtao/chinese-number)
