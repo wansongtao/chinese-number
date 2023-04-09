@@ -59,7 +59,7 @@ export const decimal = (digit: number, mode: modeType = 'default') => {
   }
 
   const chineseDigitTable =
-    (mode === 'max' || mode === 'maxAmount') ? maxChineseDigits : chineseDigits;
+    mode === 'max' || mode === 'maxAmount' ? maxChineseDigits : chineseDigits;
 
   if (mode === 'amount' || mode === 'maxAmount') {
     const text = ['角', '分', '厘'] as const;
@@ -99,7 +99,7 @@ export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
   }
 
   const chineseDigitTable =
-    (mode === 'max' || mode === 'maxAmount') ? maxChineseDigits : chineseDigits;
+    mode === 'max' || mode === 'maxAmount' ? maxChineseDigits : chineseDigits;
 
   const ploy = {
     /**
@@ -238,7 +238,7 @@ const convertToChineseNumber = (
   const digits = digitString.split(/([0-9]{4})/).filter((item) => item !== '');
 
   const chineseDigitTable =
-    (mode === 'max' || mode === 'maxAmount') ? maxChineseDigits : chineseDigits;
+    mode === 'max' || mode === 'maxAmount' ? maxChineseDigits : chineseDigits;
 
   const len = digits.length;
   digits.forEach((item, index) => {
@@ -251,9 +251,19 @@ const convertToChineseNumber = (
     }
 
     if (index !== 0) {
-      // 这种情况 [0002, 0001] [0010, 3400] 都需要补零
-      if ((num > 0 && num < 1000) || digits[index - 1].lastIndexOf('0') === 3) {
-        chineseDigit += chineseDigitTable[0];
+      // 自身为零且前一组数字为零，则不需要添零
+      if (!num && !Number(digits[index - 1])) {
+        return;
+      }
+
+      if (Number(digits[index - 1]) && num) {
+        // 这种情况 [0002, 0001] [0010, 3400] 都需要补零
+        if (
+          (num > 0 && num < 1000) ||
+          (digits[index - 1].lastIndexOf('0') === 3 && num)
+        ) {
+          chineseDigit += chineseDigitTable[0];
+        }
       }
     }
 
