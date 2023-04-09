@@ -1,6 +1,6 @@
 {
   "name": "number2chinesenumber",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "",
   "type": "module",
   "files": [
@@ -17,23 +17,30 @@
   },
   "scripts": {
     "build": "vite build",
-    "publish": "npm publish --access=public"
+    "publish": "npm publish --access=public",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "keywords": [
-    "chineseNumber",
     "number",
-    "convertNumber",
-    "convertToChineseNumber",
-    "chinese2number"
+    "chinese",
+    "chineseNumber",
+    "chinese number",
+    "chinese2number",
+    "chinese to number",
+    "convert to chinese number",
+    "convert number"
   ],
   "author": "wansongtao",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^18.15.11",
+    "@vitest/coverage-c8": "^0.29.8",
     "eslint": "^8.37.0",
     "prettier": "^2.8.7",
     "typescript": "^5.0.3",
     "vite": "^4.2.1",
-    "vite-plugin-dts": "^2.1.0"
+    "vite-plugin-dts": "^2.1.0",
+    "vitest": "^0.29.8"
   }
 }
