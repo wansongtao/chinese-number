@@ -43,7 +43,8 @@ const maxChineseDigits = [
 /**
  * @description 小数部分转换中文数字
  * @param digit
- * @param mode
+ * @param mode 默认中文小写数字
+ * (amount => 中文小写金额 | max => 中文大写数字 | maxAmount => 中文大写数字金额)
  * @returns
  */
 export const decimal = (digit: number, mode: modeType = 'default') => {
@@ -88,7 +89,8 @@ export const decimal = (digit: number, mode: modeType = 'default') => {
 /**
  * @description 一万以下数字转换
  * @param digit
- * @param mode
+ * @param mode 默认中文小写数字
+ * (amount => 中文小写金额 | max => 中文大写数字 | maxAmount => 中文大写数字金额)
  * @returns
  */
 export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
