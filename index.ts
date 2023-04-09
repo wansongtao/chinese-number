@@ -35,9 +35,9 @@ const maxChineseDigits = [
   '拾',
   '佰',
   '仟',
-  '万',
+  '萬',
   '亿',
-  '万亿'
+  '萬亿'
 ] as const;
 
 /**
@@ -50,10 +50,8 @@ const maxChineseDigits = [
 export const decimal = (digit: number, mode: modeType = 'default') => {
   let digital = digit.toFixed(3);
   const idx = digital.indexOf('.');
-  if (idx === -1) {
-    return '';
-  }
   digital = digital.substring(idx + 1, idx + 4);
+
   while (digital[digital.length - 1] === '0') {
     digital = digital.substring(0, digital.length - 1);
   }
@@ -113,9 +111,7 @@ export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
       }
 
       const multiple = (digital / 10) | 0;
-      const chineseDigit =
-        (multiple > 1 ? chineseDigitTable[multiple] : '') +
-        chineseDigitTable[10];
+      const chineseDigit = chineseDigitTable[multiple] + chineseDigitTable[10];
 
       const remainder = digital % 10;
       if (remainder === 0) {
@@ -221,7 +217,7 @@ const convertToChineseNumber = (
   let digitString = digital.toString();
   const digitLen = digitString.length;
   if (digitLen > 16) {
-    digitString = digitString.substring(digitLen - 16);
+    digitString = digitString.substring(0, 16);
   }
 
   if (digitLen <= 4) {
@@ -252,7 +248,7 @@ const convertToChineseNumber = (
 
     if (index !== 0) {
       // 自身为零且前一组数字为零，则不需要添零
-      if (!num && !Number(digits[index - 1])) {
+      if (!num && !Number(digits[index + 1])) {
         return;
       }
 
