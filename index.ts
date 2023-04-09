@@ -324,7 +324,7 @@ const convertToChineseNumber = (
     }
   }
 
-  if (digit !== digital) {
+  if (Math.abs(digit) !== digital) {
     const decimalText = decimal(digit, mode);
     chineseDigit += decimalText;
   }
