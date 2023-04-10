@@ -52,11 +52,15 @@ export const decimalToChineseNumber = (
   digit: number,
   mode: modeType = 'default'
 ) => {
-  const idx = digit.toString().indexOf('.');
+  const digitStr = digit.toString();
+  const idx = digitStr.indexOf('.');
   if (idx === -1) {
     return '';
   }
-  let digital = digit.toString().substring(idx + 1, idx + 4);
+  let digital = digitStr.substring(idx + 1, idx + 4);
+  while(digital[digital.length - 1] === '0') {
+    digital = digital.substring(0, digital.length - 1);
+  }
 
   const chineseDigitTable =
     mode === 'max' || mode === 'maxAmount' ? maxChineseDigits : chineseDigits;
@@ -65,9 +69,6 @@ export const decimalToChineseNumber = (
     simple(digital: string) {
       let chineseDigit = '点';
       for (let i = 0; i < digital.length && i < 3; i++) {
-        if (i === 2 && Number(digital[i]) === 0) {
-          continue;
-        }
         chineseDigit += chineseDigitTable[Number(digital[i])];
       }
       return chineseDigit;
@@ -77,7 +78,7 @@ export const decimalToChineseNumber = (
       for (let i = 0; i < digital.length && i < 3; i++) {
         const num = Number(digital[i]);
 
-        if (num === 0 && !Number(digital[i + 1])) {
+        if (num === 0 && !Number(digital[i - 1])) {
           continue;
         }
 
