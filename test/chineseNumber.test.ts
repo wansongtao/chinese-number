@@ -3,15 +3,22 @@ import { test, expect } from 'vitest';
 
 test('decimalToChineseNumber to chinese number', () => {
   expect(decimalToChineseNumber(0.123)).toBe('点一二三');
-  expect(decimalToChineseNumber(0.103, 'amount')).toBe('一角零三厘');
+  expect(decimalToChineseNumber(0.6)).toBe('点六');
+  expect(decimalToChineseNumber(0.6006)).toBe('点六');
+  expect(decimalToChineseNumber(0.006)).toBe('点零零六');
   expect(decimalToChineseNumber(0.1055, 'max')).toBe('点壹零伍');
-  expect(decimalToChineseNumber(0.0046, 'maxAmount')).toBe('零肆厘');
+  expect(decimalToChineseNumber(0.06)).toBe('点零六');
+  expect(decimalToChineseNumber(0.060)).toBe('点零六');
+  expect(decimalToChineseNumber(0.0606)).toBe('点零六');
+
+  expect(decimalToChineseNumber(0.103, 'amount')).toBe('一角零三厘');
+  expect(decimalToChineseNumber(0.0046, 'maxAmount')).toBe('肆厘');
   expect(decimalToChineseNumber(460, 'maxAmount')).toBe('');
   expect(decimalToChineseNumber(0.46, 'maxAmount')).toBe('肆角陆分');
   expect(decimalToChineseNumber(0.6000, 'maxAmount')).toBe('陆角');
-  expect(decimalToChineseNumber(0.6000)).toBe('点六');
-  expect(decimalToChineseNumber(0.0060)).toBe('点零零六');
-  expect(decimalToChineseNumber(0.0060, 'amount')).toBe('零六厘');
+  expect(decimalToChineseNumber(0.6009, 'maxAmount')).toBe('陆角');
+  expect(decimalToChineseNumber(0.0060, 'amount')).toBe('六厘');
+  expect(decimalToChineseNumber(0.0609, 'maxAmount')).toBe('陆分');
 });
 
 test('numbers below 10,000 are converted chinese numbers', () => {
@@ -66,4 +73,9 @@ test('number to chinese number', () => {
 
   expect(convertToChineseNumber(1010, 'amount')).toBe('一千零一十元');
   expect(convertToChineseNumber(1000.99, 'maxAmount')).toBe('壹仟元玖角玖分');
+  expect(convertToChineseNumber(0.99, 'maxAmount')).toBe('玖角玖分');
+  expect(convertToChineseNumber(0.99, 'amount')).toBe('九角九分');
+  expect(convertToChineseNumber(0.0990, 'amount')).toBe('九分九厘');
+  expect(convertToChineseNumber(0.90)).toBe('零点九');
+  expect(convertToChineseNumber(0.9909, 'max')).toBe('零点玖玖');
 });
