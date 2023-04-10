@@ -64,7 +64,10 @@ export const decimalToChineseNumber = (
   const ploy = {
     simple(digital: string) {
       let chineseDigit = '点';
-      for (let i = 0; i < digital.length; i++) {
+      for (let i = 0; i < digital.length && i < 3; i++) {
+        if (i === 2 && Number(digital[i]) === 0) {
+          continue;
+        }
         chineseDigit += chineseDigitTable[Number(digital[i])];
       }
       return chineseDigit;
@@ -74,7 +77,7 @@ export const decimalToChineseNumber = (
       for (let i = 0; i < digital.length && i < 3; i++) {
         const num = Number(digital[i]);
 
-        if (num === 0 && (Number(digital[i + 1]) === 0 || i === 2)) {
+        if (num === 0 && !Number(digital[i + 1])) {
           continue;
         }
 
