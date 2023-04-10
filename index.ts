@@ -35,10 +35,11 @@ const maxChineseDigits = [
   '拾',
   '佰',
   '仟',
-  '萬',
+  '万',
   '亿',
-  '萬亿'
+  '万亿'
 ] as const;
+const amountUnits = ['角', '分', '厘', '元'] as const;
 
 /**
  * @description 小数部分转换中文数字
@@ -47,41 +48,50 @@ const maxChineseDigits = [
  * (amount => 中文小写金额 | max => 中文大写数字 | maxAmount => 中文大写数字金额)
  * @returns
  */
-export const decimal = (digit: number, mode: modeType = 'default') => {
-  let digital = digit.toFixed(3);
-  const idx = digital.indexOf('.');
-  digital = digital.substring(idx + 1, idx + 4);
-
-  while (digital[digital.length - 1] === '0') {
-    digital = digital.substring(0, digital.length - 1);
+export const decimalToChineseNumber = (
+  digit: number,
+  mode: modeType = 'default'
+) => {
+  const idx = digit.toString().indexOf('.');
+  if (idx === -1) {
+    return '';
   }
+  let digital = digit.toString().substring(idx + 1, idx + 4);
 
   const chineseDigitTable =
     mode === 'max' || mode === 'maxAmount' ? maxChineseDigits : chineseDigits;
 
-  if (mode === 'amount' || mode === 'maxAmount') {
-    const text = ['角', '分', '厘'] as const;
-    let chineseDigit = '';
-    for (let i = 0; i < digital.length; i++) {
-      const num = Number(digital[i]);
-      if (i !== 0 && num === 0 && Number(digital[i - 1]) === 0) {
-        continue;
+  const ploy = {
+    simple(digital: string) {
+      let chineseDigit = '点';
+      for (let i = 0; i < digital.length; i++) {
+        chineseDigit += chineseDigitTable[Number(digital[i])];
       }
+      return chineseDigit;
+    },
+    amount(digital: string) {
+      let chineseDigit = '';
+      for (let i = 0; i < digital.length && i < 3; i++) {
+        const num = Number(digital[i]);
 
-      chineseDigit += chineseDigitTable[num];
+        if (num === 0 && Number(digital[i + 1]) === 0) {
+          continue;
+        }
 
-      if (num !== 0) {
-        chineseDigit += text[i];
+        chineseDigit += chineseDigitTable[num];
+        if (num !== 0) {
+          chineseDigit += amountUnits[i];
+        }
       }
+      return chineseDigit;
     }
-    return chineseDigit;
+  };
+
+  if (mode === 'amount' || mode === 'maxAmount') {
+    return ploy.amount(digital);
   }
 
-  let chineseDigit = '点';
-  for (let i = 0; i < digital.length; i++) {
-    chineseDigit += chineseDigitTable[Number(digital[i])];
-  }
-  return chineseDigit;
+  return ploy.simple(digital);
 };
 
 /**
@@ -111,7 +121,9 @@ export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
       }
 
       const multiple = (digital / 10) | 0;
-      const chineseDigit = chineseDigitTable[multiple] + chineseDigitTable[10];
+      const chineseDigit =
+        (multiple > 1 ? chineseDigitTable[multiple] : '') +
+        chineseDigitTable[10];
 
       const remainder = digital % 10;
       if (remainder === 0) {
@@ -207,8 +219,8 @@ const convertToChineseNumber = (
   digit: number,
   mode: modeType = 'default'
 ): string => {
-  let chineseDigit = '';
   let digital = Math.trunc(digit);
+  let chineseDigit = '';
   if (digital < 0) {
     chineseDigit = '负';
     digital = Math.abs(digital);
@@ -230,98 +242,78 @@ const convertToChineseNumber = (
     digitString = digitString.padStart(16, '0');
   }
 
-  // 将大数字拆分，例如：123456789 => ['0001', '2345', '6789']
   const digits = digitString.split(/([0-9]{4})/).filter((item) => item !== '');
 
   const chineseDigitTable =
     mode === 'max' || mode === 'maxAmount' ? maxChineseDigits : chineseDigits;
 
   const len = digits.length;
-  digits.forEach((item, index) => {
+  digits.forEach((item, index, arr) => {
     const num = Number(item);
-    let text = ltTenThousand(num, mode);
-
-    if (len === 1) {
-      chineseDigit += text;
-      return;
-    }
+    const text = ltTenThousand(num, mode);
 
     if (index !== 0) {
-      // 自身为零且前一组数字为零，则不需要添零
-      if (!num && !Number(digits[index + 1])) {
+      // 自身为零且后一组数字也为零，则跳过
+      if (!num && !Number(arr[index + 1])) {
         return;
       }
 
-      if (Number(digits[index - 1]) && num) {
-        // 这种情况 [0002, 0001] [0010, 3400] 都需要补零
-        if (
-          (num > 0 && num < 1000) ||
-          (digits[index - 1].lastIndexOf('0') === 3 && num)
-        ) {
-          chineseDigit += chineseDigitTable[0];
-        }
+      // 这种情况 [0002, 0101] [0010, 3400] 都需要补零
+      if (
+        Number(arr[index - 1]) &&
+        num &&
+        (num < 1000 || arr[index - 1].at(-1) === '0')
+      ) {
+        chineseDigit += chineseDigitTable[0];
       }
     }
 
-    // 数字小于一亿 => 1万至9999万...
-    if (len === 2) {
-      if (index === 0) {
-        chineseDigit = text + chineseDigitTable[13];
-        return;
-      }
+    chineseDigit += text;
 
-      chineseDigit += text;
+    // 8位数
+    if (len === 2 && index === 0) {
+      chineseDigit += chineseDigitTable[13];
       return;
     }
 
-    // 数字小于一万亿
+    // 12位数
     if (len === 3) {
       if (index === 0) {
-        chineseDigit = text + chineseDigitTable[14];
+        chineseDigit += chineseDigitTable[14];
         return;
       }
 
       if (index === 1 && num !== 0) {
-        chineseDigit += text + chineseDigitTable[13];
+        chineseDigit += chineseDigitTable[13];
         return;
       }
-
-      chineseDigit += text;
-      return;
     }
 
-    // 千万亿级别
+    // 16位数
     if (len === 4) {
       if (index === 0) {
-        chineseDigit = text + chineseDigitTable[15];
+        chineseDigit += chineseDigitTable[15];
         return;
       }
 
       if (index === 1 && num !== 0) {
-        chineseDigit += text + chineseDigitTable[14];
+        chineseDigit += chineseDigitTable[14];
         return;
       }
 
       if (index === 2 && num !== 0) {
-        chineseDigit += text + chineseDigitTable[13];
+        chineseDigit += chineseDigitTable[13];
         return;
       }
-
-      chineseDigit += text;
-      return;
     }
   });
 
-  if (digital !== 0) {
-    if (mode === 'amount') {
-      chineseDigit += '元';
-    } else if (mode === 'maxAmount') {
-      chineseDigit += '圆';
-    }
+  if (digital !== 0 && (mode === 'amount' || mode === 'maxAmount')) {
+    chineseDigit += amountUnits[3];
   }
 
   if (Math.abs(digit) !== digital) {
-    const decimalText = decimal(digit, mode);
+    const decimalText = decimalToChineseNumber(digit, mode);
     chineseDigit += decimalText;
   }
 
