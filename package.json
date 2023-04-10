@@ -1,6 +1,6 @@
 {
   "name": "number2chinesenumber",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "",
   "type": "module",
   "files": [
@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "publish": "npm publish --access=public",
+    "publish": "vite build && npm publish --access=public",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
@@ -27,6 +27,7 @@
     "chineseNumber",
     "chinese number",
     "chinese2number",
+    "to chinese number",
     "chinese to number",
     "convert to chinese number",
     "convert number"
