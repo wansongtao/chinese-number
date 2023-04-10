@@ -74,7 +74,7 @@ export const decimalToChineseNumber = (
       for (let i = 0; i < digital.length && i < 3; i++) {
         const num = Number(digital[i]);
 
-        if (num === 0 && Number(digital[i + 1]) === 0) {
+        if (num === 0 && (Number(digital[i + 1]) === 0 || i === 2)) {
           continue;
         }
 
