@@ -1,5 +1,5 @@
 # convertToChineseNumber  
-Convert Arabic numerals to Chinese numbers, support up to 16 digits. Support Chinese uppercase and lowercase numbers, support decimals (keep three digits). 100% test coverage.
+Convert Arabic numerals to Chinese numbers, support up to 16 digits. Support Chinese uppercase and lowercase numbers, support decimals (keep three digits). 100% test coverage.  
 将阿拉伯数字转换为中文数字，最大支持16位数字。支持中文大、小写数字、支持小数（保留三位）。测试覆盖率百分之百。
 ## install
 ```bash
