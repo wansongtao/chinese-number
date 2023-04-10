@@ -314,7 +314,12 @@ const convertToChineseNumber = (
 
   if (Math.abs(digit) !== digital) {
     const decimalText = decimalToChineseNumber(digit, mode);
-    chineseDigit += decimalText;
+
+    if (digital === 0 && (mode === 'amount' || mode === 'maxAmount')) {
+      chineseDigit = decimalText;
+    } else {
+      chineseDigit += decimalText;
+    }
   }
 
   return chineseDigit;
