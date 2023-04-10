@@ -262,7 +262,7 @@ const convertToChineseNumber = (
       if (
         Number(arr[index - 1]) &&
         num &&
-        (num < 1000 || arr[index - 1].at(-1) === '0')
+        (num < 1000 || arr[index - 1][arr[index - 1].length - 1] === '0')
       ) {
         chineseDigit += chineseDigitTable[0];
       }
