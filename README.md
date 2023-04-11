@@ -10,11 +10,11 @@ $ npm install number2chinesenumber
 ```javascript
 import convertToChineseNumber from 'number2chinesenumber'
 
-const num = 100.007
-convertToChineseNumber(num) // 一百点零零七
-convertToChineseNumber(num, 'maxAmount') // 壹佰元零柒厘
-convertToChineseNumber(num, 'amount') // 一百元零七厘
-convertToChineseNumber(num, 'max') // 壹佰点零零柒
+const num = 100.7007
+convertToChineseNumber(num) // 一百点七
+convertToChineseNumber(num, 'maxAmount') // 壹佰元零柒角整
+convertToChineseNumber(num, 'amount') // 一百元零七角
+convertToChineseNumber(num, 'max') // 壹佰点柒
 
 
 convertToChineseNumber(100107) // 十万零一百零七
