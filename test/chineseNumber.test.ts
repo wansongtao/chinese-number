@@ -72,10 +72,23 @@ test('number to chinese number', () => {
   expect(convertToChineseNumber(90900080, 'max')).toBe('玖仟零玖拾万零捌拾');
 
   expect(convertToChineseNumber(1010, 'amount')).toBe('一千零一十元');
-  expect(convertToChineseNumber(1000.99, 'maxAmount')).toBe('壹仟元玖角玖分');
   expect(convertToChineseNumber(0.99, 'maxAmount')).toBe('玖角玖分');
   expect(convertToChineseNumber(0.99, 'amount')).toBe('九角九分');
   expect(convertToChineseNumber(0.0990, 'amount')).toBe('九分九厘');
   expect(convertToChineseNumber(0.90)).toBe('零点九');
   expect(convertToChineseNumber(0.9909, 'max')).toBe('零点玖玖');
+
+  expect(convertToChineseNumber(1000, 'maxAmount')).toBe('壹仟元整');
+  expect(convertToChineseNumber(1001, 'maxAmount')).toBe('壹仟零壹元整');
+  expect(convertToChineseNumber(1000.99, 'maxAmount')).toBe('壹仟元零玖角玖分');
+  expect(convertToChineseNumber(1000.90, 'maxAmount')).toBe('壹仟元零玖角整');
+  expect(convertToChineseNumber(1001.90, 'maxAmount')).toBe('壹仟零壹元玖角整');
+  expect(convertToChineseNumber(1001.090, 'maxAmount')).toBe('壹仟零壹元零玖分');
+
+  expect(convertToChineseNumber(100.7007)).toBe('一百点七');
+  expect(convertToChineseNumber(100.7007, 'max')).toBe('壹佰点柒');
+  expect(convertToChineseNumber(100.7007, 'amount')).toBe('一百元零七角');
+  expect(convertToChineseNumber(100.7007, 'maxAmount')).toBe('壹佰元零柒角整');
+
+  expect(convertToChineseNumber(100107)).toBe('十万零一百零七');
 });
