@@ -58,7 +58,7 @@ export const decimalToChineseNumber = (
     return '';
   }
   let digital = digitStr.substring(idx + 1, idx + 4);
-  while(digital[digital.length - 1] === '0') {
+  while (digital[digital.length - 1] === '0') {
     digital = digital.substring(0, digital.length - 1);
   }
 
@@ -316,14 +316,40 @@ const convertToChineseNumber = (
     chineseDigit += amountUnits[3];
   }
 
+  // 处理小数部分
   if (Math.abs(digit) !== digital) {
     const decimalText = decimalToChineseNumber(digit, mode);
 
-    if (digital === 0 && (mode === 'amount' || mode === 'maxAmount')) {
-      chineseDigit = decimalText;
-    } else {
+    if (mode === 'amount' || mode === 'maxAmount') {
+      if (digital === 0) {
+        return decimalText;
+      }
+
+      // 金额模式下，小数部分小于0.1或整数部分个位数为零时需要加上零
+      if (decimalText.indexOf(amountUnits[0]) === -1 || digital % 10 === 0) {
+        chineseDigit += chineseDigitTable[0];
+      }
+
       chineseDigit += decimalText;
+
+      // 大写金额模式下，小数部分只有一位时，需要加上整
+      if (
+        mode === 'maxAmount' &&
+        decimalText.indexOf(amountUnits[1]) === -1 &&
+        decimalText.indexOf(amountUnits[2]) === -1
+      ) {
+        chineseDigit += '整';
+      }
+
+      return chineseDigit;
     }
+
+    chineseDigit += decimalText;
+    return chineseDigit;
+  }
+
+  if (mode === 'maxAmount') {
+    chineseDigit += '整';
   }
 
   return chineseDigit;
