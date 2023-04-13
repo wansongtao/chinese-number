@@ -41,13 +41,6 @@ const maxChineseDigits = [
 ] as const;
 const amountUnits = ['角', '分', '厘', '元'] as const;
 
-/**
- * @description 小数部分转换中文数字
- * @param digit
- * @param mode 默认中文小写数字
- * (amount => 中文小写金额 | max => 中文大写数字 | maxAmount => 中文大写数字金额)
- * @returns
- */
 export const decimalToChineseNumber = (
   digit: number,
   mode: modeType = 'default'
@@ -98,13 +91,6 @@ export const decimalToChineseNumber = (
   return ploy.simple(digital);
 };
 
-/**
- * @description 一万以下数字转换
- * @param digit
- * @param mode 默认中文小写数字
- * (amount => 中文小写金额 | max => 中文大写数字 | maxAmount => 中文大写数字金额)
- * @returns
- */
 export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
   if (digit > 9999) {
     return '';
@@ -114,11 +100,6 @@ export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
     mode === 'max' || mode === 'maxAmount' ? maxChineseDigits : chineseDigits;
 
   const ploy = {
-    /**
-     * @description 小于100的数转换
-     * @param digital
-     * @returns
-     */
     ltHundred(digital: number) {
       if (digital <= 10) {
         return chineseDigitTable[digital];
@@ -136,11 +117,6 @@ export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
 
       return chineseDigit + chineseDigitTable[remainder];
     },
-    /**
-     * @description 小于1000的数转换
-     * @param digital
-     * @returns
-     */
     ltThousand(digital: number) {
       let chineseDigit =
         chineseDigitTable[(digital / 100) | 0] + chineseDigitTable[11];
@@ -168,11 +144,6 @@ export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
 
       return chineseDigit + ploy.ltHundred(remainder);
     },
-    /**
-     * 小于一万的数转换
-     * @param digital
-     * @returns
-     */
     ltTenThousand(digital: number) {
       const chineseDigit =
         chineseDigitTable[(digital / 1000) | 0] + chineseDigitTable[12];
@@ -216,7 +187,8 @@ export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
 /**
  * 阿拉伯数字转中文数字
  * @param digit
- * @param mode 默认default => 中文小写数字 | amount => 中文小写金额 | max => 中文大写数字 | maxAmount => 中文大写数字金额
+ * @param mode 默认中文小写数字  
+ * (amount => 中文小写金额 | max => 中文大写数字 | maxAmount => 中文大写数字金额)
  * @returns
  */
 const convertToChineseNumber = (
