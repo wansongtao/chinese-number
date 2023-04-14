@@ -245,14 +245,17 @@ const convertToChineseNumber = (
         chineseDigit = chineseDigitTable[0] + chineseDigit;
       }
 
-      if (num !== 0) {
-        if (index === 1) {
-          chineseDigit = chineseDigitTable[13] + chineseDigit;
-        } else if (index === 2) {
-          chineseDigit = chineseDigitTable[14] + chineseDigit;
-        } else if (index === 3) {
-          chineseDigit = chineseDigitTable[15] + chineseDigit;
-        }
+      if (!num) {
+        chineseDigit = text + chineseDigit;
+        return;
+      }
+
+      if (index === 1) {
+        chineseDigit = chineseDigitTable[13] + chineseDigit;
+      } else if (index === 2) {
+        chineseDigit = chineseDigitTable[14] + chineseDigit;
+      } else if (index === 3) {
+        chineseDigit = chineseDigitTable[15] + chineseDigit;
       }
 
       chineseDigit = text + chineseDigit;
