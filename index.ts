@@ -145,7 +145,7 @@ export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
       return chineseDigit + ploy.ltHundred(remainder);
     },
     ltTenThousand(digital: number) {
-      const chineseDigit =
+      let chineseDigit =
         chineseDigitTable[(digital / 1000) | 0] + chineseDigitTable[12];
 
       const remainder = digital % 1000;
@@ -157,15 +157,16 @@ export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
           chineseDigit + chineseDigitTable[0] + chineseDigitTable[remainder]
         );
       }
-      if (remainder < 100) {
-        if (remainder === 10) {
-          return (
-            chineseDigit +
-            chineseDigitTable[0] +
-            chineseDigitTable[1] +
-            chineseDigitTable[10]
-          );
+      if (remainder < 20) {
+        chineseDigit +=
+          chineseDigitTable[0] + chineseDigitTable[1] + chineseDigitTable[10];
+
+        if (remainder > 10) {
+          chineseDigit += chineseDigitTable[remainder - 10];
         }
+        return chineseDigit;
+      }
+      if (remainder < 100) {
         return chineseDigit + chineseDigitTable[0] + ploy.ltHundred(remainder);
       }
 
@@ -237,11 +238,7 @@ const convertToChineseNumber = (
       }
 
       // 1. 20101 => [0101, 0002] 2. 103400 => [3400, 0010] 都需要补零
-      if (
-        num &&
-        preNum &&
-        (preNum < 1000 || num % 10 === 0)
-      ) {
+      if (num && preNum && (preNum < 1000 || num % 10 === 0)) {
         chineseDigit = chineseDigitTable[0] + chineseDigit;
       }
 
@@ -283,7 +280,7 @@ const convertToChineseNumber = (
   // 处理小数部分
   const decimalText = decimalToChineseNumber(digit, mode);
   if (mode === 'amount' || mode === 'maxAmount') {
-    let text = ''
+    let text = '';
     // 大写金额模式下，小数部分只有一位时，需要加上整
     if (
       mode === 'maxAmount' &&
