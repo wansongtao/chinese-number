@@ -4,14 +4,18 @@ import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   plugins: [
-    dts()
+    dts(
+      {
+        outputDir: 'dist/types',
+      }
+    )
   ],
   build: {
     target: 'es2018',
     lib: {
       entry: resolve(__dirname, './index.ts'),
       name: 'ChineseNumber',
-      fileName: 'chinese-number'
+      fileName: 'index'
     }
   }
 });

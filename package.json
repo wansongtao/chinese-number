@@ -6,13 +6,13 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/chinese-number.umd.cjs",
-  "module": "./dist/chinese-number.js",
-  "typings": "./dist/index.d.ts",
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "typings": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/chinese-number.js",
-      "require": "./dist/chinese-number.umd.cjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
     }
   },
   "scripts": {
