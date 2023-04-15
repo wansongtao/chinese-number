@@ -27,7 +27,9 @@
     "chinese number",
     "to chinese",
     "to chinese number",
-    "convert number"
+    "convert number",
+    "中文数字",
+    "阿拉伯数字转中文数字"
   ],
   "author": "wansongtao",
   "license": "MIT",
