@@ -65,7 +65,7 @@ test('number to chinese number', () => {
   expect(convertToChineseNumber(10000000)).toBe('一千万');
   expect(convertToChineseNumber(100000000000)).toBe('一千亿');
   expect(convertToChineseNumber(1000000000000000)).toBe('一千万亿');
-  expect(convertToChineseNumber(10000000000000000)).toBe('一千万亿');
+  expect(convertToChineseNumber(10000000000000000)).toBe('');
   expect(convertToChineseNumber(10000001)).toBe('一千万零一');
   expect(convertToChineseNumber(10800201, 'maxAmount')).toBe('壹仟零捌拾万零贰佰零壹元整');
   expect(convertToChineseNumber(100000000001)).toBe('一千亿零一');
@@ -105,4 +105,11 @@ test('number to chinese number', () => {
   expect(convertToChineseNumber(100107, 'amount')).toBe('十万零一百零七元');
   expect(convertToChineseNumber(100107, 'max')).toBe('拾万零壹佰零柒');
   expect(convertToChineseNumber(100107, 'maxAmount')).toBe('拾万零壹佰零柒元整');
+
+  expect(convertToChineseNumber('1000000000000001')).toBe('一千万亿零一');
+  expect(convertToChineseNumber('-1001')).toBe('负一千零一');
+  expect(convertToChineseNumber('-1001.090')).toBe('负一千零一点零九');
+  expect(convertToChineseNumber('+1001')).toBe('一千零一');
+  expect(convertToChineseNumber('+1001.99')).toBe('一千零一点九九');
+  expect(convertToChineseNumber('10ad')).toBe('');
 });

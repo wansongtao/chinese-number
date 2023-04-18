@@ -41,6 +41,16 @@ const maxChineseDigits = [
 ] as const;
 const amountUnits = ['角', '分', '厘', '元'] as const;
 
+/**
+ * 验证是否为1-16位数字（长度不包含符号与小数部分）
+ * @param digit 
+ * @returns 
+ */
+const validateDigit = (digit: string) => {
+  const reg = /^[-+]?\d{1,16}(\.\d+)?$/;
+  return reg.test(digit);
+};
+
 export const decimalToChineseNumber = (
   digit: number,
   mode: modeType = 'default'
@@ -187,19 +197,23 @@ export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
 
 /**
  * 阿拉伯数字转中文数字
- * @param digit
+ * @param digit 1-16位数字(不含符号与小数部分)
  * @param mode 默认中文小写数字
  * (amount => 中文小写金额 | max => 中文大写数字 | maxAmount => 中文大写数字金额)
  * @returns
  */
 const convertToChineseNumber = (
-  digit: number,
+  digit: number | string,
   mode: modeType = 'default'
 ): string => {
-  let digital = Math.trunc(digit);
-  if (digital < 0) {
-    digital = Math.abs(digital);
+  const numString = digit.toString();
+  if (!validateDigit(numString)) {
+    return '';
   }
+
+  const nums = numString.split('.');
+  const digital = Number(nums[0].replace(/[+-]/g, ''));
+  const decimal = nums[1] ? Number('.' + nums[1]) : 0;
 
   const chineseDigitTable =
     mode === 'max' || mode === 'maxAmount' ? maxChineseDigits : chineseDigits;
@@ -208,9 +222,6 @@ const convertToChineseNumber = (
   if (digital !== 0) {
     let digitString = digital.toString();
     const digitLen = digitString.length;
-    if (digitLen > 16) {
-      digitString = digitString.substring(0, 16);
-    }
 
     if (digitLen <= 4) {
       digitString = digitString.padStart(4, '0');
@@ -265,11 +276,11 @@ const convertToChineseNumber = (
     chineseDigit = chineseDigitTable[0];
   }
 
-  if (digit < 0) {
+  if (numString.indexOf('-') > -1 && (digital !== 0 || decimal !== 0)) {
     chineseDigit = '负' + chineseDigit;
   }
 
-  if (digit === Math.trunc(digit)) {
+  if (decimal === 0) {
     if (mode === 'maxAmount' && digital) {
       chineseDigit += '整';
     }
@@ -278,7 +289,7 @@ const convertToChineseNumber = (
   }
 
   // 处理小数部分
-  const decimalText = decimalToChineseNumber(digit, mode);
+  const decimalText = decimalToChineseNumber(decimal, mode);
   if (mode === 'amount' || mode === 'maxAmount') {
     let text = '';
     // 大写金额模式下，小数部分只有一位时，需要加上整
