@@ -1,7 +1,7 @@
 {
   "name": "number2chinesenumber",
   "version": "1.3.2",
-  "description": "convert to chinese number",
+  "description": "convert to chinese number(将阿拉伯数字转为中文数字，支持大小写)",
   "type": "module",
   "files": [
     "dist"
