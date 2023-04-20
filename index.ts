@@ -55,12 +55,13 @@ export const decimalToChineseNumber = (
   digit: number,
   mode: modeType = 'default'
 ) => {
-  const digitStr = Number(digit).toString();
+  const digitStr = digit.toString();
   const idx = digitStr.indexOf('.');
   if (idx === -1) {
     return '';
   }
   let digital = digitStr.substring(idx + 1, idx + 4);
+  digital = digital.replace(/0+$/, '');
 
   const chineseDigitTable =
     mode === 'max' || mode === 'maxAmount' ? maxChineseDigits : chineseDigits;
@@ -286,7 +287,6 @@ const convertToChineseNumber = (
     return chineseDigit;
   }
 
-  // 处理小数部分
   const decimalText = decimalToChineseNumber(decimal, mode);
   if (mode === 'amount' || mode === 'maxAmount') {
     let text = '';
@@ -310,7 +310,7 @@ const convertToChineseNumber = (
 
     return chineseDigit + decimalText + text;
   }
-  chineseDigit += decimalText;
+  chineseDigit += '点' + decimalText;
 
   return chineseDigit;
 };
