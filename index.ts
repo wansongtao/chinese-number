@@ -217,60 +217,92 @@ const convertToChineseNumber = (
   const chineseDigitTable =
     mode === 'max' || mode === 'maxAmount' ? maxChineseDigits : chineseDigits;
   let chineseDigit = '';
+  const ploy = {
+    convertInteger() {
+      let digitString = digital.toString();
+      const digitLen = digitString.length;
+
+      if (digitLen <= 4) {
+        digitString = digitString.padStart(4, '0');
+      } else if (digitLen <= 8) {
+        digitString = digitString.padStart(8, '0');
+      } else if (digitLen <= 12) {
+        digitString = digitString.padStart(12, '0');
+      } else {
+        digitString = digitString.padStart(16, '0');
+      }
+
+      const digits = digitString
+        .split(/([0-9]{4})/)
+        .filter((item) => item !== '')
+        .reverse();
+
+      digits.forEach((item, index, arr) => {
+        const num = Number(item);
+        const text = ltTenThousand(num, mode);
+
+        const preNum = Number(arr[index - 1]);
+        // 自身为零且前一组数字也为零，则跳过
+        if (!num && !preNum) {
+          return;
+        }
+
+        // 1. 20101 => [0101, 0002] 2. 103400 => [3400, 0010] 都需要补零
+        if (num && preNum && (preNum < 1000 || num % 10 === 0)) {
+          chineseDigit = chineseDigitTable[0] + chineseDigit;
+        }
+
+        if (!num) {
+          chineseDigit = text + chineseDigit;
+          return;
+        }
+
+        if (index === 1) {
+          chineseDigit = chineseDigitTable[13] + chineseDigit;
+        } else if (index === 2) {
+          chineseDigit = chineseDigitTable[14] + chineseDigit;
+        } else if (index === 3) {
+          chineseDigit = chineseDigitTable[15] + chineseDigit;
+        }
+
+        chineseDigit = text + chineseDigit;
+      });
+
+      if (mode === 'amount' || mode === 'maxAmount') {
+        chineseDigit += amountUnits[3];
+      }
+    },
+    convertDecimal() {
+      const decimalText = decimalToChineseNumber(decimal, mode);
+      if (mode === 'amount' || mode === 'maxAmount') {
+        let text = '';
+        // 大写金额模式下，小数部分只有一位时，需要加上整
+        if (
+          mode === 'maxAmount' &&
+          decimalText.indexOf(amountUnits[1]) === -1 &&
+          decimalText.indexOf(amountUnits[2]) === -1
+        ) {
+          text = '整';
+        }
+
+        if (digital === 0) {
+          return decimalText + text;
+        }
+
+        // 金额模式下，小数部分小于0.1或整数部分个位数为零时需要加上零
+        if (decimalText.indexOf(amountUnits[0]) === -1 || digital % 10 === 0) {
+          chineseDigit += chineseDigitTable[0];
+        }
+
+        return chineseDigit + decimalText + text;
+      }
+      chineseDigit += '点' + decimalText;
+      return chineseDigit;
+    }
+  }
 
   if (digital !== 0) {
-    let digitString = digital.toString();
-    const digitLen = digitString.length;
-
-    if (digitLen <= 4) {
-      digitString = digitString.padStart(4, '0');
-    } else if (digitLen <= 8) {
-      digitString = digitString.padStart(8, '0');
-    } else if (digitLen <= 12) {
-      digitString = digitString.padStart(12, '0');
-    } else {
-      digitString = digitString.padStart(16, '0');
-    }
-
-    const digits = digitString
-      .split(/([0-9]{4})/)
-      .filter((item) => item !== '')
-      .reverse();
-
-    digits.forEach((item, index, arr) => {
-      const num = Number(item);
-      const text = ltTenThousand(num, mode);
-
-      const preNum = Number(arr[index - 1]);
-      // 自身为零且前一组数字也为零，则跳过
-      if (!num && !preNum) {
-        return;
-      }
-
-      // 1. 20101 => [0101, 0002] 2. 103400 => [3400, 0010] 都需要补零
-      if (num && preNum && (preNum < 1000 || num % 10 === 0)) {
-        chineseDigit = chineseDigitTable[0] + chineseDigit;
-      }
-
-      if (!num) {
-        chineseDigit = text + chineseDigit;
-        return;
-      }
-
-      if (index === 1) {
-        chineseDigit = chineseDigitTable[13] + chineseDigit;
-      } else if (index === 2) {
-        chineseDigit = chineseDigitTable[14] + chineseDigit;
-      } else if (index === 3) {
-        chineseDigit = chineseDigitTable[15] + chineseDigit;
-      }
-
-      chineseDigit = text + chineseDigit;
-    });
-
-    if (mode === 'amount' || mode === 'maxAmount') {
-      chineseDigit += amountUnits[3];
-    }
+    ploy.convertInteger();
   } else {
     chineseDigit = chineseDigitTable[0];
   }
@@ -287,32 +319,7 @@ const convertToChineseNumber = (
     return chineseDigit;
   }
 
-  const decimalText = decimalToChineseNumber(decimal, mode);
-  if (mode === 'amount' || mode === 'maxAmount') {
-    let text = '';
-    // 大写金额模式下，小数部分只有一位时，需要加上整
-    if (
-      mode === 'maxAmount' &&
-      decimalText.indexOf(amountUnits[1]) === -1 &&
-      decimalText.indexOf(amountUnits[2]) === -1
-    ) {
-      text = '整';
-    }
-
-    if (digital === 0) {
-      return decimalText + text;
-    }
-
-    // 金额模式下，小数部分小于0.1或整数部分个位数为零时需要加上零
-    if (decimalText.indexOf(amountUnits[0]) === -1 || digital % 10 === 0) {
-      chineseDigit += chineseDigitTable[0];
-    }
-
-    return chineseDigit + decimalText + text;
-  }
-  chineseDigit += '点' + decimalText;
-
-  return chineseDigit;
+  return ploy.convertDecimal();
 };
 
 export default convertToChineseNumber;
