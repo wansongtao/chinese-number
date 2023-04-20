@@ -55,30 +55,27 @@ export const decimalToChineseNumber = (
   digit: number,
   mode: modeType = 'default'
 ) => {
-  const digitStr = digit.toString();
+  const digitStr = Number(digit).toString();
   const idx = digitStr.indexOf('.');
   if (idx === -1) {
     return '';
   }
   let digital = digitStr.substring(idx + 1, idx + 4);
-  while (digital[digital.length - 1] === '0') {
-    digital = digital.substring(0, digital.length - 1);
-  }
 
   const chineseDigitTable =
     mode === 'max' || mode === 'maxAmount' ? maxChineseDigits : chineseDigits;
 
   const ploy = {
     simple(digital: string) {
-      let chineseDigit = '点';
-      for (let i = 0; i < digital.length && i < 3; i++) {
+      let chineseDigit = '';
+      for (let i = 0; i < digital.length; i++) {
         chineseDigit += chineseDigitTable[Number(digital[i])];
       }
       return chineseDigit;
     },
     amount(digital: string) {
       let chineseDigit = '';
-      for (let i = 0; i < digital.length && i < 3; i++) {
+      for (let i = 0; i < digital.length; i++) {
         const num = Number(digital[i]);
 
         if (num === 0 && !Number(digital[i - 1])) {
@@ -86,7 +83,7 @@ export const decimalToChineseNumber = (
         }
 
         chineseDigit += chineseDigitTable[num];
-        if (num !== 0) {
+        if (num !== 0 && i < 3) {
           chineseDigit += amountUnits[i];
         }
       }
@@ -197,7 +194,7 @@ export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
 
 /**
  * 阿拉伯数字转中文数字
- * @param digit 1-16位数字(不含符号与小数部分)
+ * @param digit 1-16位数字(长度不包含符号与小数部分，只保留三位小数)
  * @param mode 默认中文小写数字
  * (amount => 中文小写金额 | max => 中文大写数字 | maxAmount => 中文大写数字金额)
  * @returns
@@ -208,6 +205,7 @@ const convertToChineseNumber = (
 ): string => {
   const numString = digit.toString();
   if (!validateDigit(numString)) {
+    console.warn('The number format is wrong.');
     return '';
   }
 
