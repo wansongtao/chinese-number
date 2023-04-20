@@ -2,14 +2,14 @@ import convertToChineseNumber, { decimalToChineseNumber, ltTenThousand } from '.
 import { test, expect } from 'vitest';
 
 test('decimalToChineseNumber to chinese number', () => {
-  expect(decimalToChineseNumber(0.123)).toBe('点一二三');
-  expect(decimalToChineseNumber(0.6)).toBe('点六');
-  expect(decimalToChineseNumber(0.6006)).toBe('点六');
-  expect(decimalToChineseNumber(0.006)).toBe('点零零六');
-  expect(decimalToChineseNumber(0.1055, 'max')).toBe('点壹零伍');
-  expect(decimalToChineseNumber(0.06)).toBe('点零六');
-  expect(decimalToChineseNumber(0.060)).toBe('点零六');
-  expect(decimalToChineseNumber(0.0606)).toBe('点零六');
+  expect(decimalToChineseNumber(0.123)).toBe('一二三');
+  expect(decimalToChineseNumber(0.6)).toBe('六');
+  expect(decimalToChineseNumber(0.6006)).toBe('六');
+  expect(decimalToChineseNumber(0.006)).toBe('零零六');
+  expect(decimalToChineseNumber(0.1055, 'max')).toBe('壹零伍');
+  expect(decimalToChineseNumber(0.06)).toBe('零六');
+  expect(decimalToChineseNumber(0.060)).toBe('零六');
+  expect(decimalToChineseNumber(0.0606)).toBe('零六');
 
   expect(decimalToChineseNumber(0.103, 'amount')).toBe('一角零三厘');
   expect(decimalToChineseNumber(0.0046, 'maxAmount')).toBe('肆厘');
