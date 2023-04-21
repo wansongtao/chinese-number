@@ -43,8 +43,8 @@ const amountUnits = ['角', '分', '厘', '元'] as const;
 
 /**
  * 验证是否为1-16位数字（长度不包含符号与小数部分）
- * @param digit 
- * @returns 
+ * @param digit
+ * @returns
  */
 const validateDigit = (digit: string) => {
   const reg = /^[-+]?\d{1,16}(\.\d+)?$/;
@@ -206,17 +206,23 @@ const convertToChineseNumber = (
 ): string => {
   const numString = digit.toString();
   if (!validateDigit(numString)) {
-    console.warn('The number format is wrong.');
+    console.warn('The number format is error.');
     return '';
   }
 
   const nums = numString.split('.');
   const digital = Number(nums[0].replace(/[+-]/g, ''));
-  const decimal = nums[1] ? Number('.' + nums[1]) : 0;
+  const threeDecimal = nums[1] ? nums[1].substring(0, 3) : '';
+  const decimal = threeDecimal ? Number('.' + threeDecimal) : 0;
+
+  if (digital === 0 && decimal === 0) {
+    return chineseDigits[0];
+  }
 
   const chineseDigitTable =
     mode === 'max' || mode === 'maxAmount' ? maxChineseDigits : chineseDigits;
   let chineseDigit = '';
+
   const ploy = {
     convertInteger() {
       let digitString = digital.toString();
@@ -237,6 +243,7 @@ const convertToChineseNumber = (
         .filter((item) => item !== '')
         .reverse();
 
+      let chineseText = '';
       digits.forEach((item, index, arr) => {
         const num = Number(item);
         const text = ltTenThousand(num, mode);
@@ -249,60 +256,64 @@ const convertToChineseNumber = (
 
         // 1. 20101 => [0101, 0002] 2. 103400 => [3400, 0010] 都需要补零
         if (num && preNum && (preNum < 1000 || num % 10 === 0)) {
-          chineseDigit = chineseDigitTable[0] + chineseDigit;
+          chineseText = chineseDigitTable[0] + chineseText;
         }
 
         if (!num) {
-          chineseDigit = text + chineseDigit;
+          chineseText = text + chineseText;
           return;
         }
 
         if (index === 1) {
-          chineseDigit = chineseDigitTable[13] + chineseDigit;
+          chineseText = chineseDigitTable[13] + chineseText;
         } else if (index === 2) {
-          chineseDigit = chineseDigitTable[14] + chineseDigit;
+          chineseText = chineseDigitTable[14] + chineseText;
         } else if (index === 3) {
-          chineseDigit = chineseDigitTable[15] + chineseDigit;
+          chineseText = chineseDigitTable[15] + chineseText;
         }
 
-        chineseDigit = text + chineseDigit;
+        chineseText = text + chineseText;
       });
 
       if (mode === 'amount' || mode === 'maxAmount') {
-        chineseDigit += amountUnits[3];
+        chineseText += amountUnits[3];
       }
+
+      return chineseText;
     },
     convertDecimal() {
       const decimalText = decimalToChineseNumber(decimal, mode);
-      if (mode === 'amount' || mode === 'maxAmount') {
-        let text = '';
-        // 大写金额模式下，小数部分只有一位时，需要加上整
-        if (
-          mode === 'maxAmount' &&
-          decimalText.indexOf(amountUnits[1]) === -1 &&
-          decimalText.indexOf(amountUnits[2]) === -1
-        ) {
-          text = '整';
-        }
-
-        if (digital === 0) {
-          return decimalText + text;
-        }
-
-        // 金额模式下，小数部分小于0.1或整数部分个位数为零时需要加上零
-        if (decimalText.indexOf(amountUnits[0]) === -1 || digital % 10 === 0) {
-          chineseDigit += chineseDigitTable[0];
-        }
-
-        return chineseDigit + decimalText + text;
+      if (mode === 'default' || mode === 'max') {
+        chineseDigit += '点' + decimalText;
+        return;
       }
-      chineseDigit += '点' + decimalText;
-      return chineseDigit;
+
+      // 大写金额模式下，小数部分只有一位时，需要加上整
+      let text = '';
+      if (
+        mode === 'maxAmount' &&
+        decimalText.indexOf(amountUnits[1]) === -1 &&
+        decimalText.indexOf(amountUnits[2]) === -1
+      ) {
+        text = '整';
+      }
+
+      if (digital === 0) {
+        chineseDigit = decimalText + text;
+        return;
+      }
+
+      // 金额模式下，小数部分小于0.1或整数部分个位数为零时需要加上零
+      if (decimalText.indexOf(amountUnits[0]) === -1 || digital % 10 === 0) {
+        chineseDigit += chineseDigitTable[0];
+      }
+
+      chineseDigit += decimalText + text;
     }
-  }
+  };
 
   if (digital !== 0) {
-    ploy.convertInteger();
+    chineseDigit = ploy.convertInteger();
   } else {
     chineseDigit = chineseDigitTable[0];
   }
@@ -319,7 +330,8 @@ const convertToChineseNumber = (
     return chineseDigit;
   }
 
-  return ploy.convertDecimal();
+  ploy.convertDecimal();
+  return chineseDigit;
 };
 
 export default convertToChineseNumber;

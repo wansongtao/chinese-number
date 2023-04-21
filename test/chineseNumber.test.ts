@@ -100,6 +100,7 @@ test('number to chinese number', () => {
   expect(convertToChineseNumber(100.7007, 'max')).toBe('壹佰点柒');
   expect(convertToChineseNumber(100.7007, 'amount')).toBe('一百元零七角');
   expect(convertToChineseNumber(100.7007, 'maxAmount')).toBe('壹佰元零柒角整');
+  expect(convertToChineseNumber(100.0007, 'maxAmount')).toBe('壹佰元整');
 
   expect(convertToChineseNumber(100107)).toBe('十万零一百零七');
   expect(convertToChineseNumber(100107, 'amount')).toBe('十万零一百零七元');
