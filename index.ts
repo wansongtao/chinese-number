@@ -60,7 +60,7 @@ export const decimalToChineseNumber = (
   if (idx === -1) {
     return '';
   }
-  let digital = digitStr.substring(idx + 1, idx + 4);
+  let digital = digitStr.substring(idx + 1);
   digital = digital.replace(/0+$/, '');
 
   const chineseDigitTable =
