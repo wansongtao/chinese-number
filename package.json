@@ -1,6 +1,6 @@
 {
   "name": "number2chinesenumber",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "convert to chinese number(阿拉伯数字转中文数字，支持大小写)",
   "type": "module",
   "files": [
@@ -12,14 +12,15 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.umd.cjs"
+      "require": "./dist/index.umd.cjs",
+      "types": "./dist/types/index.d.ts"
     }
   },
   "scripts": {
     "build": "vite build",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "publish": "vite build && npm publish --access=public"
+    "publish": "vite build && npm publish"
   },
   "keywords": [
     "number",
