@@ -200,7 +200,7 @@ export const ltTenThousand = (digit: number, mode: modeType = 'default') => {
  * (amount => 中文小写金额 | max => 中文大写数字 | maxAmount => 中文大写数字金额)
  * @returns
  */
-const convertToChineseNumber = (
+const number2chinesenumber = (
   digit: number | string,
   mode: modeType = 'default'
 ): string => {
@@ -334,4 +334,4 @@ const convertToChineseNumber = (
   return chineseDigit;
 };
 
-export default convertToChineseNumber;
+export default number2chinesenumber;

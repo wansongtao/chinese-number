@@ -1,7 +1,7 @@
 {
   "name": "number2chinesenumber",
-  "version": "1.4.3",
-  "description": "convert to chinese number(阿拉伯数字转中文数字，支持大小写)",
+  "version": "2.0.0",
+  "description": "number to chinese number(阿拉伯数字转中文数字，支持大小写)",
   "type": "module",
   "files": [
     "dist"
@@ -29,7 +29,8 @@
     "to chinese number",
     "convert number",
     "中文数字",
-    "阿拉伯数字转中文数字"
+    "阿拉伯数字转中文数字",
+    "中文大写金额"
   ],
   "author": "wansongtao",
   "license": "MIT",
